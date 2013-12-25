@@ -17,7 +17,6 @@ import android.app.ListActivity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -101,15 +100,17 @@ public class StoryListActivity extends ListActivity{
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent){
 			RelativeLayout layout = (RelativeLayout) super.getView(position, convertView, parent);
+			TextView rating = (TextView) layout.findViewById(R.id.rating);
 			TextView title = (TextView) layout.findViewById(R.id.title);
 			TextView author = (TextView) layout.findViewById(R.id.author);
 			TextView subs = (TextView) layout.findViewById(R.id.substances);
 			TextView date = (TextView) layout.findViewById(R.id.date);
 			
+			rating.setText(getItem(position).getRating());
 			title.setText(getItem(position).getTitle());
-			author.setText(getItem(position).getAuthor());
-			subs.setText(getItem(position).getSubstances());
-			date.setText(getItem(position).getDate());
+			author.setText("Author: " + getItem(position).getAuthor());
+			subs.setText("Substances: " + getItem(position).getSubstances());
+			date.setText("Date: " + getItem(position).getDate());
 			
 			return layout;
 		}
@@ -153,17 +154,37 @@ public class StoryListActivity extends ListActivity{
 			
 			int start = 0;
 			int end = 0;
+			
+			int i = 0;
 			while(true){
+			
+				i++;
+				if(i > 50){
+					break;
+				}
 				
 				start = pageText.indexOf("<tr class=\"\">", start);
 				if(start <= 0){
 					break;
 				}
 				
-				/*start = pageText.indexOf("star_", start) + 5;
-				end = pageText.indexOf(".", start);
 				
-				int rating = Integer.parseInt(pageText.substring(start, end));*/
+				//checking if an image exists for the rating
+				int temp_start = pageText.indexOf("d>", start);
+				int temp_end = pageText.indexOf("</td>", start);
+				
+				String temp_rat = pageText.substring(temp_start, temp_end);
+				
+				String rating;
+				if(temp_rat.indexOf("img") > 0){
+					temp_start = pageText.indexOf("star_", temp_start) + 5;
+					temp_end = pageText.indexOf(".", temp_start);
+					
+					rating = pageText.substring(temp_start, temp_end);
+					
+				}else{
+					rating = "0";
+				}
 				
 				
 				start = pageText.indexOf("href=\"", start) + 6;
@@ -186,12 +207,15 @@ public class StoryListActivity extends ListActivity{
 				end = pageText.indexOf("<", start);
 				String date = pageText.substring(start, end);
 				
+				//Example of the table structure from the Erowid Stories
 				//<tr class=""><td> <img align="right" src="images/exp_star_2.gif" alt="Highly Recommended" border="0"></td><td><a href="exp.php?ID=53780">I Am Not Hardcore: Or Important Safety Tip</a></td><td>maison</td><td>Alcohol, Ketamine & 1,4-butanediol</td><td align="right">May 24 2007</td>
 			
 				
 				start = end;
 				
-				stories.add(new Story(link, title, author, subs, date));
+				//Log.e("OUTPUT", "(" + rating + ", " + link + ", " + title + ", " + author + ", " + subs + ", " + date + ")");
+				
+				stories.add(new Story(rating, link, title, author, subs, date));
 			}
 			
 			return stories;
