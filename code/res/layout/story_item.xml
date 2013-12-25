@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" 
+    android:id="@+id/story_item">
+    
+   	<TextView 
+        android:id="@+id/title"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:gravity="left"
+        android:textSize="20sp"
+        android:padding="10dp"
+        android:text="TITLE"/>
+   	
+  	<TextView 
+        android:id="@+id/author"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:gravity="left"
+        android:layout_below="@id/title"
+        android:textSize="12sp"
+        android:padding="10dp"
+        android:text="AUTHOR"/>
+  	
+  	<TextView 
+        android:id="@+id/substances"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:gravity="right"
+        android:layout_alignParentRight="true"
+        android:textSize="12sp"
+        android:padding="10dp"
+        android:text="SUBSTANCES"/>
+  	
+  	<TextView 
+        android:id="@+id/date"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:gravity="left"
+        android:layout_toRightOf="@id/author"
+        android:layout_below="@id/title"
+        android:textSize="12sp"
+        android:padding="10dp"
+        android:text="DATE"/>
+
+</RelativeLayout>
+
