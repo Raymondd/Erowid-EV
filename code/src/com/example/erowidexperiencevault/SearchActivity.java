@@ -3,7 +3,6 @@ package com.example.erowidexperiencevault;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -16,7 +15,6 @@ import org.apache.http.util.EntityUtils;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
@@ -42,23 +40,12 @@ public class SearchActivity extends ListActivity{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.search);
 		
-		loading = (ProgressBar) findViewById(R.id.progress);
+		loading = (ProgressBar) findViewById(R.id.progressBar);
 		mainLayout = (LinearLayout) findViewById(R.id.linear);
 		EditText search = (EditText) findViewById(R.id.search_term);
-		
-        mSubList = new ArrayList<Substance>();
         
-        try {
-			mSubList = (new SubstanceNames().execute()).get();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		} catch (ExecutionException e) {
-			e.printStackTrace();
-		}
+        new SubstanceNames().execute();
 		
-        
-		mSubAdapter = new SubAdapter(this, R.layout.sub_item, R.id.sub_name, mSubList);
-		setListAdapter(mSubAdapter);
 		
 		search.addTextChangedListener(new TextWatcher() {
 			
@@ -121,7 +108,7 @@ public class SearchActivity extends ListActivity{
 		
 		protected ArrayList<Substance> doInBackground(Void... arg0){	
 			String pageText = "";
-	    	
+			
 	    	HttpClient client = new DefaultHttpClient();
 			HttpGet get = new HttpGet(URL);
 			try{
@@ -169,6 +156,10 @@ public class SearchActivity extends ListActivity{
 				names.add(new Substance(name, id));
 			}
 			
+			mSubList = names;
+			
+			mSubAdapter = new SubAdapter(SearchActivity.this, R.layout.sub_item, R.id.sub_name, mSubList);
+			SearchActivity.this.setListAdapter(mSubAdapter);
 			return names;
 		}
 		
@@ -180,7 +171,6 @@ public class SearchActivity extends ListActivity{
     	protected void onPreExecute(){
 			loading.setVisibility(View.VISIBLE);
 			mainLayout.setVisibility(View.GONE);
-    		
     	}
 	}
 }

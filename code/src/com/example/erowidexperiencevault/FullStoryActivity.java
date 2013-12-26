@@ -16,20 +16,26 @@ import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.webkit.WebSettings.LayoutAlgorithm;
+import android.view.View;
 import android.webkit.WebView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 
 public class FullStoryActivity extends Activity {
+	ProgressBar loading;
+	LinearLayout mainLayout;
+	WebView webView;
+	
+	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.full_story);
 
 		String link = getIntent().getStringExtra("link");
-
-		WebView webView = (WebView) findViewById(R.id.mainWeb);
-	    //webView.getSettings().setLoadWithOverviewMode(true);
-	    //webView.getSettings().setUseWideViewPort(true);
-		webView.getSettings().setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
+		
+		//loading = (ProgressBar) findViewById(R.id.proBar);
+		mainLayout = (LinearLayout) findViewById(R.id.mainView);
+		webView = (WebView) findViewById(R.id.mainWeb);
 		
 		String storyHTML = "";
 
@@ -116,13 +122,13 @@ public class FullStoryActivity extends Activity {
 		}
 
 		protected void onPostExecute(ArrayList<Story> result) {
-			// loading.setVisibility(View.GONE);
-			// mainLayout.setVisibility(View.VISIBLE);
+			//loading.setVisibility(View.GONE);
+			//mainLayout.setVisibility(View.VISIBLE);
 		}
 
 		protected void onPreExecute() {
-			// loading.setVisibility(View.VISIBLE);
-			// mainLayout.setVisibility(View.GONE);
+			//loading.setVisibility(View.VISIBLE);
+			//mainLayout.setVisibility(View.GONE);
 
 		}
 	}

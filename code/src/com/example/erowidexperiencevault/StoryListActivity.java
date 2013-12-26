@@ -3,7 +3,6 @@ package com.example.erowidexperiencevault;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -49,46 +48,7 @@ public class StoryListActivity extends ListActivity{
 		
         mStoryList = new ArrayList<Story>();
         
-        
-        try {
-			mStoryList = (new getStories().execute("" + sub_id)).get();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		} catch (ExecutionException e) {
-			e.printStackTrace();
-		}
-		
-        
-		mStoryAdapter = new StoryAdapter(this, R.layout.story_item, R.id.title, mStoryList);
-		setListAdapter(mStoryAdapter);
-		
-		/*
-		search.addTextChangedListener(new TextWatcher() {
-			
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before, int count) {};
-			
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count, int after) {};
-			
-			@Override
-			public void afterTextChanged(Editable s){
-				if(s.length() > 0){
-					ArrayList<Substance> newSubList = new ArrayList<Substance>();
-					for(int i = 0; i < mSubList.size(); i++){
-						if((mSubList.get(i).getName().toLowerCase()).contains((s.toString().toLowerCase()))){
-							newSubList.add(mSubList.get(i));
-						}
-					}
-					mSubAdapter = new SubAdapter(SearchActivity.this, R.layout.sub_item, R.id.sub_name, newSubList);
-					SearchActivity.this.setListAdapter(mSubAdapter);
-				}else{
-					mSubAdapter = new SubAdapter(SearchActivity.this, R.layout.sub_item, R.id.sub_name, mSubList);
-					SearchActivity.this.setListAdapter(mSubAdapter);
-					
-				}
-			};
-		});*/
+        new getStories().execute("" + sub_id);
 		
 	}
 	
@@ -218,6 +178,10 @@ public class StoryListActivity extends ListActivity{
 				stories.add(new Story(rating, link, title, author, subs, date));
 			}
 			
+			mStoryList = stories;
+			mStoryAdapter = new StoryAdapter(StoryListActivity.this, R.layout.story_item, R.id.title, mStoryList);
+			StoryListActivity.this.setListAdapter(mStoryAdapter);
+			
 			return stories;
 		}
 		
@@ -229,7 +193,6 @@ public class StoryListActivity extends ListActivity{
     	protected void onPreExecute(){
 			loading.setVisibility(View.VISIBLE);
 			mainLayout.setVisibility(View.GONE);
-    		
     	}
 	}
 
