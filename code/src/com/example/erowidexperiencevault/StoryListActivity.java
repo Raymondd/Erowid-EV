@@ -15,6 +15,7 @@ import org.apache.http.util.EntityUtils;
 
 import android.app.ListActivity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -118,12 +119,11 @@ public class StoryListActivity extends ListActivity{
 	}
 	
 	public void onListItemClick(ListView listview, View view, int position, long id){
-		//Story story = mStoryAdapter.getItem(position);
+		Story story = mStoryAdapter.getItem(position);
 		
-		/*Intent i = new Intent(this, );
-		i.putExtra("id", sub.getId());
-		i.putExtra("name", sub.getName());
-		startActivity(i);*/
+		Intent i = new Intent(this, FullStoryActivity.class);
+		i.putExtra("link", story.getLink());
+		startActivity(i);
 	}
 	
 	public class getStories extends AsyncTask<String, Void, ArrayList<Story>>{
