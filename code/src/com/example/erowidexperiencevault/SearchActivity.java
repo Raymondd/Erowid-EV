@@ -15,6 +15,8 @@ import org.apache.http.util.EntityUtils;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
@@ -22,6 +24,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -33,7 +36,9 @@ public class SearchActivity extends ListActivity{
 	SubAdapter mSubAdapter;
 	ArrayList<Substance> mSubList;
 	ProgressBar loading;
+	ProgressBar loading2;
 	LinearLayout mainLayout;
+	LinearLayout noCon;
 	
 	
 	public void onCreate(Bundle savedInstanceState){
@@ -41,10 +46,34 @@ public class SearchActivity extends ListActivity{
 		setContentView(R.layout.search);
 		
 		loading = (ProgressBar) findViewById(R.id.progressBar);
+		loading2 = (ProgressBar) findViewById(R.id.proBar2);
 		mainLayout = (LinearLayout) findViewById(R.id.linear);
 		EditText search = (EditText) findViewById(R.id.search_term);
-        
-        new SubstanceNames().execute();
+		noCon = (LinearLayout) findViewById(R.id.noCon);
+        Button refresh = (Button) findViewById(R.id.refresh);
+		
+		if(isNetworkConnected()){
+			new SubstanceNames().execute();
+		}else{
+			loading.setVisibility(View.GONE);
+			noCon.setVisibility(View.VISIBLE);
+		}
+		
+		
+		refresh.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				if(isNetworkConnected()){
+					noCon.setVisibility(View.GONE);
+					loading.setVisibility(View.VISIBLE);
+					new SubstanceNames().execute();
+				}else{
+					loading2.setVisibility(View.VISIBLE);
+				}
+				
+			}
+		});
 		
 		
 		search.addTextChangedListener(new TextWatcher() {
@@ -103,6 +132,14 @@ public class SearchActivity extends ListActivity{
 		startActivity(i);
 	}
 	
+	
+	public boolean isNetworkConnected() {
+         final ConnectivityManager conMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+         final NetworkInfo activeNetwork = conMgr.getActiveNetworkInfo();
+         return (activeNetwork != null && activeNetwork.getState() == NetworkInfo.State.CONNECTED);
+    }
+	
+	
 	public class SubstanceNames extends AsyncTask<Void, Void, ArrayList<Substance>>{
 		private final String URL = "http://www.erowid.org/experiences/";
 		
@@ -128,6 +165,10 @@ public class SearchActivity extends ListActivity{
 			
 			int beg = pageText.indexOf("select");
 			int fin = pageText.indexOf("</select>");
+			
+			if(beg < 1 || fin < 1){
+				return null;
+			}
 			
 			
 			String options = pageText.substring(beg, fin);
@@ -173,5 +214,7 @@ public class SearchActivity extends ListActivity{
 			mainLayout.setVisibility(View.GONE);
     	}
 	}
+	
+	
 }
 
