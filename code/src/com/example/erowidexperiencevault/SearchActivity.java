@@ -40,10 +40,11 @@ public class SearchActivity extends ListActivity{
 	LinearLayout mainLayout;
 	LinearLayout noCon;
 	
-	
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.search);
+		
+		
 		
 		loading = (ProgressBar) findViewById(R.id.progressBar);
 		loading2 = (ProgressBar) findViewById(R.id.proBar2);
