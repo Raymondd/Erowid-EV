@@ -21,16 +21,17 @@ public final class R {
         public static final int activity_vertical_margin=0x7f040001;
     }
     public static final class drawable {
-        public static final int ic_drawer=0x7f020000;
-        public static final int ic_launcher=0x7f020001;
+        public static final int ic_action_refresh=0x7f020000;
+        public static final int ic_drawer=0x7f020001;
+        public static final int ic_launcher=0x7f020002;
     }
     public static final class id {
-        public static final int action_settings=0x7f080013;
         public static final int author=0x7f08000c;
         public static final int date=0x7f08000e;
         public static final int linear=0x7f080007;
         public static final int mainView=0x7f080000;
         public static final int mainWeb=0x7f080001;
+        public static final int menuRefresh=0x7f080013;
         public static final int message=0x7f080004;
         public static final int name=0x7f080010;
         public static final int noCon=0x7f080003;
@@ -52,9 +53,10 @@ public final class R {
         public static final int story_item=0x7f030002;
         public static final int story_list=0x7f030003;
         public static final int sub_item=0x7f030004;
+        public static final int top_pro=0x7f030005;
     }
     public static final class menu {
-        public static final int hello=0x7f070000;
+        public static final int top_menu=0x7f070000;
     }
     public static final class string {
         public static final int action_settings=0x7f050001;

@@ -3,6 +3,7 @@ package com.example.erowidexperiencevault;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -21,6 +22,9 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -39,6 +43,7 @@ public class SearchActivity extends ListActivity{
 	ProgressBar loading2;
 	LinearLayout mainLayout;
 	LinearLayout noCon;
+	Menu optionsMenu;
 	
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
@@ -90,7 +95,7 @@ public class SearchActivity extends ListActivity{
 				if(s.length() > 0){
 					ArrayList<Substance> newSubList = new ArrayList<Substance>();
 					for(int i = 0; i < mSubList.size(); i++){
-						if((mSubList.get(i).getName().toLowerCase()).contains((s.toString().toLowerCase()))){
+						if((mSubList.get(i).getName().toLowerCase(Locale.ENGLISH)).contains((s.toString().toLowerCase()))){
 							newSubList.add(mSubList.get(i));
 						}
 					}
@@ -105,6 +110,32 @@ public class SearchActivity extends ListActivity{
 		});
 		
 	}
+	
+	
+	public boolean onCreateOptionsMenu(Menu menu) {
+	    this.optionsMenu = menu;
+	    MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.top_menu, menu);
+	    return super.onCreateOptionsMenu(menu);
+	}
+	
+	
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    switch (item.getItemId()) {
+	    case R.id.menuRefresh:
+			if(isNetworkConnected()){
+				new SubstanceNames().execute();
+			}else{
+				loading.setVisibility(View.GONE);
+				noCon.setVisibility(View.VISIBLE);
+			}
+	    return true;
+	    }
+	    return super.onOptionsItemSelected(item);
+	}
+	
+	
+	
 	
 	private class SubAdapter extends ArrayAdapter<Substance>{
 		
@@ -201,11 +232,11 @@ public class SearchActivity extends ListActivity{
 			mSubList = names;
 			
 			mSubAdapter = new SubAdapter(SearchActivity.this, R.layout.sub_item, R.id.sub_name, mSubList);
-			SearchActivity.this.setListAdapter(mSubAdapter);
 			return names;
 		}
 		
     	protected void onPostExecute(ArrayList<Substance> result){
+    		setListAdapter(mSubAdapter);
 			loading.setVisibility(View.GONE);
 			mainLayout.setVisibility(View.VISIBLE);
     	}

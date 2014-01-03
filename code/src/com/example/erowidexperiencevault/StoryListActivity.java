@@ -12,11 +12,15 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 
+import android.app.ActionBar;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -32,10 +36,16 @@ public class StoryListActivity extends ListActivity{
 	ArrayList<Story> mStoryList;
 	ProgressBar loading;
 	LinearLayout mainLayout;
+	Menu optionsMenu;
 	
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.story_list);
+		
+        ActionBar actionBar = getActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeButtonEnabled(true);
+		
 		
 		String sub_name = getIntent().getStringExtra("name");
 		int sub_id = getIntent().getIntExtra("id", 0);
@@ -49,9 +59,39 @@ public class StoryListActivity extends ListActivity{
         mStoryList = new ArrayList<Story>();
         
         new getStories().execute("" + sub_id);
-		
+     
 	}
 	
+	public void onListItemClick(ListView listview, View view, int position, long id){
+		Story story = mStoryAdapter.getItem(position);
+		
+		Intent i = new Intent(this, FullStoryActivity.class);
+		i.putExtra("link", story.getLink());
+		startActivity(i);
+	}
+	
+	public boolean onCreateOptionsMenu(Menu menu) {
+	    this.optionsMenu = menu;
+	    MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.top_menu, menu);
+	    
+        return super.onCreateOptionsMenu(menu);
+	}
+	
+    public boolean onOptionsItemSelected(MenuItem item){       
+	    switch (item.getItemId()) {
+	    case R.id.menuRefresh:
+	    	// Complete with your code
+	    	return true;
+	    	
+        case android.R.id.home:
+            this.finish();
+            return true;
+	    }
+	    return super.onOptionsItemSelected(item);
+    }
+	
+    
 	private class StoryAdapter extends ArrayAdapter<Story>{
 		
 		public StoryAdapter(Context context, int resource, int textViewResourceId, List<Story> objects){
@@ -77,15 +117,8 @@ public class StoryListActivity extends ListActivity{
 		}
 	
 	}
-	
-	public void onListItemClick(ListView listview, View view, int position, long id){
-		Story story = mStoryAdapter.getItem(position);
-		
-		Intent i = new Intent(this, FullStoryActivity.class);
-		i.putExtra("link", story.getLink());
-		startActivity(i);
-	}
-	
+    
+    
 	public class getStories extends AsyncTask<String, Void, ArrayList<Story>>{
 		
 		protected ArrayList<Story> doInBackground(String... id){	
